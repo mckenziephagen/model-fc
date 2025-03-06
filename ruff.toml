@@ -1,0 +1,39 @@
+target-version = "py311"
+
+line-length = 88
+force-exclude = true
+extend-exclude = [
+  "__pycache__",
+  "build",
+  "_version.py",
+]
+
+[lint]
+select = [
+  "F",
+  "E",
+  "C",
+  "W",
+  "B",
+  "I",
+]
+ignore = [
+  "B905",
+  "C901",
+  "E203"
+]
+
+[lint.extend-per-file-ignores]
+"docs/_templates/numpy_docstring.py" = ["F821"]
+
+[lint.isort]
+case-sensitive = true
+combine-as-imports = true
+force-sort-within-sections = true
+no-sections = false
+order-by-type = true
+relative-imports-order = "closest-to-furthest"
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[format]
+quote-style = "double"
