@@ -10,12 +10,21 @@ description = "calculating model-based connectomes"
 readme = "README.md"
 requires-python = ">=3.9"
 
+
 dependencies = [
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
 ]
+
+[options.extras_require]
+dev =
+    pre-commit
+    pytest
+
+all =
+    %(dev)s
 
 [tool.setuptools_scm]
 
