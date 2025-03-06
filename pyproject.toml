@@ -12,19 +12,16 @@ requires-python = ">=3.9"
 
 
 dependencies = [
+  "numpy"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
 ]
 
-[options.extras_require]
-dev =
-    pre-commit
-    pytest
-
-all =
-    %(dev)s
+[project.optional-dependencies]
+  dev = ["pre-commit",
+         "pytest"]
 
 [tool.setuptools_scm]
 
