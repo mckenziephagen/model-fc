@@ -9,7 +9,6 @@ from sklearn.metrics import r2_score
 def run_model(train_ts, test_ts, n_rois, model, **kwargs):
     """Calculate a model based functional connectivity matrix.
 
-
     train_ts: training timeseries
     test_ts: testing timeseries
     n_rois: number of rois in parcellation
@@ -20,9 +19,11 @@ def run_model(train_ts, test_ts, n_rois, model, **kwargs):
     assert train_ts.shape[1] == n_rois == test_ts.shape[1]
     fc_mat = np.zeros((n_rois, n_rois))
 
-    inner_rsq_dict = {"train": [], "test": []}
+    results_dict = {}
 
     for target_idx in range(train_ts.shape[1]):
+        results_dict[f"node_{target_idx}"] = {}
+
         y_train = np.array(train_ts[:, target_idx])
         X_train = np.delete(train_ts, target_idx, axis=1)
 
@@ -31,13 +32,16 @@ def run_model(train_ts, test_ts, n_rois, model, **kwargs):
 
         model.fit(X=X_train, y=y_train)
 
-        fc_mat[target_idx, :] = np.insert(model.coef_, target_idx, 0)
+        fc_mat[target_idx, :] = np.insert(model.coef_, target_idx, 1)
         test_rsq, train_rsq = eval_metrics(X_train, y_train, X_test, y_test, model)
 
-        inner_rsq_dict["test"].append(test_rsq)
-        inner_rsq_dict["train"].append(train_rsq)
+        results_dict[f"node_{target_idx}"]["model"] = model
+        results_dict[f"node_{target_idx}"]["train_r2"] = train_rsq
+        results_dict[f"node_{target_idx}"]["test_r2"] = test_rsq
 
-    return (fc_mat, inner_rsq_dict, model)
+    results_dict["fc_matrix"] = fc_mat
+
+    return results_dict
 
 
 def eval_metrics(X_train, y_train, X_test, y_test, model):
