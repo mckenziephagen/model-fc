@@ -2,7 +2,7 @@ import numpy as np
 from mpi4py import MPI
 from nilearn.connectome import ConnectivityMeasure
 from pyuoi.linear_model import UoI_Lasso
-from sklearn.linear_model import ElasticNetCV, LassoCV, LassoLarsIC
+from sklearn.linear_model import ElasticNetCV, LassoCV, LassoLarsIC, RidgeCV
 from sklearn.metrics import r2_score
 
 
@@ -17,7 +17,7 @@ def run_model(train_ts, test_ts, n_rois, model, **kwargs):
 
     """
     assert train_ts.shape[1] == n_rois == test_ts.shape[1]
-    fc_mat = np.zeros((n_rois, n_rois))
+    fc_mat = np.empty((n_rois, n_rois))
 
     results_dict = {}
 
@@ -85,6 +85,10 @@ def init_model(
         )
 
         model = lasso
+    elif model_str == "ridge-cv":
+        ridge = RidgeCV(fit_intercept=True, max_iter=max_iter)
+
+        model = ridge
 
     elif model_str == "lasso-bic":
         lasso = LassoLarsIC(criterion="bic", fit_intercept=True, max_iter=max_iter)
