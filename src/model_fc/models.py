@@ -23,6 +23,8 @@ def run_model(train_ts, test_ts, n_rois, model, **kwargs):
     inner_rsq_dict = {"train": [], "test": []}
 
     for target_idx in range(train_ts.shape[1]):
+        results_dict[f"node_{target_idx}"] = {}
+
         y_train = np.array(train_ts[:, target_idx])
         X_train = np.delete(train_ts, target_idx, axis=1)
 
@@ -34,8 +36,9 @@ def run_model(train_ts, test_ts, n_rois, model, **kwargs):
         fc_mat[target_idx, :] = np.insert(model.coef_, target_idx, 0)
         test_rsq, train_rsq = eval_metrics(X_train, y_train, X_test, y_test, model)
 
-        inner_rsq_dict["test"].append(test_rsq)
-        inner_rsq_dict["train"].append(train_rsq)
+        results_dict[f"node_{target_idx}"]["model"] = model
+        results_dict[f"node_{target_idx}"]["train_r2"] = train_rsq
+        results_dict[f"node_{target_idx}"]["test_r2"] = test_rsq
 
     return (fc_mat, inner_rsq_dict, model)
 
@@ -81,6 +84,10 @@ def init_model(
         )
 
         model = lasso
+    elif model_str == "ridge-cv":
+        ridge = RidgeCV(fit_intercept=True, max_iter=max_iter)
+
+        model = ridge
 
     elif model_str == "lasso-bic":
         lasso = LassoLarsIC(criterion="bic", fit_intercept=True, max_iter=max_iter)
