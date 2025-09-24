@@ -1,4 +1,5 @@
 import numpy as np
+from mpi4py import MPI
 from nilearn.connectome import ConnectivityMeasure
 from pyuoi.linear_model import UoI_Lasso
 from sklearn.linear_model import ElasticNetCV, LassoCV, LassoLarsIC
