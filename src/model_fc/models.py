@@ -83,10 +83,6 @@ def init_model(
         )
 
         model = lasso
-    elif model_str == "ridge-cv":
-        ridge = RidgeCV(fit_intercept=True, max_iter=max_iter)
-
-        model = ridge
 
     elif model_str == "lasso-bic":
         lasso = LassoLarsIC(criterion="bic", fit_intercept=True, max_iter=max_iter)
