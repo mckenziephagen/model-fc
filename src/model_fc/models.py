@@ -119,10 +119,10 @@ class PearsonRegressor(BaseEstimator):
 
         # Calculate the Pearson coefficient between y and every column of x
         corrmatrix = np.corrcoef(np.concatenate([X, y[:, None]], -1).T)
-        self.coeff_ = corrmatrix[-1, :-1]
+        self.coef_ = corrmatrix[-1, :-1]
         # Calculate the linear combination of columns of X with these
         # coefficients
-        naive_pred_y = X @ self.coeff_
+        naive_pred_y = X @ self.coef_
         # Calculate the scale parameter to match the variance of y
         self.scale_ = np.mean(y / naive_pred_y)
         self.is_fitted_ = True
@@ -132,4 +132,4 @@ class PearsonRegressor(BaseEstimator):
     def predict(self, X):
         check_is_fitted(self)
         X = validate_data(self, X, reset=False)
-        return (X @ self.coeff_) / self.scale_
+        return X @ self.coef_ * self.scale_
