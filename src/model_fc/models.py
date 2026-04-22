@@ -96,7 +96,7 @@ def init_model(
         enet = ElasticNetCV(fit_intercept=True, cv=5, n_jobs=-1, max_iter=max_iter)
         model = enet
 
-    elif model_str in ["correlation", "tangent"]:
+    elif model_str in ["correlation", "tangent", "partial correlation"]:
         model = ConnectivityMeasure(kind=model_str)
 
     return model
